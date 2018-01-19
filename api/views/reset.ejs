@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Heybuddy - for people with same interests</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/fontawesome/css/font-awesome.min.css" type="text/css" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.1/css/materialize.min.css" />
+    <link rel="stylesheet" href="/css/sweetalert.css" type="text/css" />
+</head>
+<body>
+<main class="container">
+    <div class="row">
+        <div class="col m12">
+            <h3>Reset your password</h3>
+            <form class="card" id="reset-password">
+                <div class="card-content">
+                    <div class="errors"></div>
+                    <div class="success"></div>
+                    <div class="input-field">
+                        <input id="email" type="email" name="email" value=<%=email %>>
+                        <label for="email">Your email:</label>
+                    </div>
+                    <div class="input-field">
+                        <input id="password" type="password" name="password">
+                        <label for="password">New password:</label>
+                    </div>
+                    <div class="input-field">
+                        <input id="password2" type="password" name="password2">
+                        <label for="password2">Repeat password:</label>
+                    </div>
+                    <input id="token" name="token" type="hidden" value=<%=token %>>
+                    <div>
+                        <input class="waves-effect waves-light btn" type="submit" value="Reset password">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+<script src="/js/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.1/js/materialize.min.js"></script>
+<script type="text/javascript" src="/js/sweetalert.min.js"></script>
+<script>
+    $(function () {
+        $('#reset-password').submit(function (event) {
+            event.preventDefault();
+            var postData = $(this).serializeArray();
+            if(postData[0].value.length == 0 || postData[1].value.length == 0 || postData[2].value.length == 0){
+                $('.errors').html('<div class="card-panel red lighten-4">\n' +
+                    '                <p class=\'red-text text-darken-3\'>Please enter your email and passwords</p>\n' +
+                    '            </div>');
+                return false;
+            }
+            $.ajax({
+                url : "/reset3",
+                type: "POST",
+                data : postData,
+                success:function(data, textStatus, jqXHR)
+                {
+                    if(data.success){
+                        $('.success').html('<div class="card-panel light-green lighten-3">\n' +
+                            '                <p class=\'green-text\'>'+ data.message +'</p>\n' +
+                            '            </div>');
+                    }
+                },
+                error: function(data)
+                {
+                    //if fails
+                    console.log(data.responseJSON.message);
+                    $('.errors').html('<div class="card-panel red lighten-4">\n' +
+                        '                <p class=\'red-text text-darken-3\'>'+ data.responseJSON.message +'</p>\n' +
+                        '            </div>');
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

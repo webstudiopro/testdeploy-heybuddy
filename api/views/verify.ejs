@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Heybuddy - for people with same interests</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/fontawesome/css/font-awesome.min.css" type="text/css" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.1/css/materialize.min.css" />
+    <link rel="stylesheet" href="/css/sweetalert.css" type="text/css" />
+
+    <style type="text/css">
+        .bg{
+            background-image: url("img/skyline.png");
+            background-repeat: no-repeat;
+            background-position: center;
+            width:100vw;
+            height:100vh;
+        }
+    </style>
+</head>
+<body>
+<main id="bg" class="container">
+    <div class="row">
+        <div class="col m12">
+            <h3>Tell us more about you</h3>
+            <form id="more-info" class="card">
+                <div class="card-content">
+                    <div class="errors"></div>
+                    <div class="success"></div>
+                    <h5>General information:</h5>
+                    <div class="input-field">
+                        <input id="name" type="text" name="name" required>
+                        <label for="name">Your name:</label>
+                    </div>
+                    <div class="input-field">
+                        <input id="age" type="number" name="age" required>
+                        <label for="age">Your age:</label>
+                    </div>
+                    <div class="">
+                        <label for="gender">Your gender:</label>
+                        <select name="gender" id="gender" class="browser-default">
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                    </div>
+                    <div class="input-field">
+                        <p>Complete your bio later on your profile page</p>
+                        <label for="name">Your bio, who you are, what you're searching for:</label>
+                    </div>
+                    <h5>Info for our search engine:</h5>
+                    <div class="input-field">
+                        <input id="interests" type="text" name="interests">
+                        <label for="interests">Please enter your hobbies and interests seperated with a comma</label>
+                    </div>
+                    <div class="input-field">
+                        <input id="disability" type="text" name="disability">
+                        <label for="disability">Please enter if you have any disabilities you want to share:(not required)</label>
+                    </div>
+                    <h5>One time information only (private):</h5>
+                    <p>Please enter your address below to detect your location</p>
+                    <div class="input-field">
+                        <input id="street" type="text" name="street" required>
+                        <label for="street">Your street + street number:</label>
+                    </div>
+                    <div class="input-field">
+                        <input id="zipcode" type="number" name="zipcode" required>
+                        <label for="zipcode">Your zipcode:</label>
+                    </div>
+                    <div class="input-field">
+                        <input id="city" type="text" name="city" required>
+                        <label for="city">Your city:</label>
+                    </div>
+                    <div class="input-field">
+                        <input id="country" type="text" name="country" required>
+                        <label for="country">Your country:</label>
+                    </div>
+                    <input type="hidden" id="latitude" name="latitude">
+                    <input type="hidden" id="longitude" name="longitude">
+                    <input id="_id" name="_id" type="hidden" value=<%=user._id %>>
+                    <div>
+                        <input class="waves-effect waves-light btn" type="submit" value="Save your info">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+<script src="/js/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.1/js/materialize.min.js"></script>
+<script type="text/javascript" src="/js/sweetalert.min.js"></script>
+<script>
+    $(function(){
+        $('select').material_select();
+        swal({
+            title:'Verification successfull',
+            type:'success',
+            text: "Excellent !, you've almost unlocked all functionality. Please give us first some basic info about you !!",
+            html:true
+        });
+        $('#more-info').submit(function (event) {
+            event.preventDefault();
+            // retrieve latitude and longitude
+            var street = $('#street').val();
+            var zipcode = $('#zipcode').val();
+            var city = $('#city').val();
+            var country = $('#country').val();
+            var address = street+'+'+zipcode+'+'+city+'+'+country;
+            var url = 'https://maps.googleapis.com/maps/api/geocode/json?address='+address+'&key=AIzaSyB0FdxJgG6xdbtJH2aDvMB0GRg2el9ykIo';
+            $.ajax({
+                url:url,
+                type:"GET",
+                success:function(data, textStatus, jqXHR){
+                    console.log(data);
+                    var lat = data.results[0].geometry.location.lat;
+                    var lng = data.results[0].geometry.location.lng;
+
+                    var postData = {
+                        _id:$('#_id').val(),
+                        name:$('#name').val(),
+                        gender:$('#gender').val(),
+                        interests:$('#interests').val(),
+                        disability:$('#disability').val(),
+                        age:$('#age').val(),
+                        city:$('#city').val(),
+                        latitude:lat,
+                        longitude:lng,
+
+                    };
+                    $.ajax({
+                        url : "/save-profile",
+                        type: "POST",
+                        data : postData,
+                        success:function(data, textStatus, jqXHR)
+                        {
+                            if(data.success){
+                                $('.success').html('<div class="card-panel light-green lighten-3">\n' +
+                                    '                <p class=\'green-text\'>'+ data.message +'</p>\n' +
+                                    '            </div>');
+
+                                swal({
+                                    title:'Basic info setup correctly',
+                                    type:'success',
+                                    text: data.message,
+                                    html:true
+                                }, function () {
+                                    window.location = '/';
+                                });
+                            }
+                        },
+                        error: function(data)
+                        {
+                            //if fails
+                            console.log(data);
+                            $('.errors').html('<div class="card-panel red lighten-4">\n' +
+                                '                <p class=\'red-text text-darken-3\'>'+ data.responseJSON.message +'</p>\n' +
+                                '            </div>');
+                        }
+                    });
+                },
+                error: function(data)
+                {
+                    //if fails
+                    console.log(data.responseJSON.message);
+                    $('.errors').html('<div class="card-panel red lighten-4">\n' +
+                        '                <p class=\'red-text text-darken-3\'>'+ data.responseJSON.message +'</p>\n' +
+                        '            </div>');
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

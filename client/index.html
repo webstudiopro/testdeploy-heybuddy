@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Heybuddy - for people with same interests</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/fontawesome/css/font-awesome.min.css" type="text/css" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.1/css/materialize.min.css" />
+    <link rel="stylesheet" href="/css/emojionearea.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropper/3.0.0/cropper.min.css" type="text/css" />
+    <link href="//cdn.quilljs.com/1.3.2/quill.snow.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/style.min.css" type="text/css" />
+    <link rel="stylesheet" href="/css/paralax.css" type="text/css" />
+    <link rel="stylesheet" href="/css/sweetalert.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="/css/slick.css" />
+    <link rel="stylesheet" type="text/css" href="/css/slick-theme.css" />
+    <link rel="stylesheet" href="/css/lightbox.min.css" />
+  </head>
+  <body>
+    <div id="root">
+    </div>
+    <script src="/js/socket.io.js"></script>
+    <script>
+        //window.socket = io('wss://172.104.142.18');
+        window.socket = io();
+        window.socket.onerror = function (err) {
+            console.log("Got error", err);
+        };
+        window.socket.onopen = function () {
+            console.log("Connected...");
+        };
+    </script>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/amplify.min.js"></script>
+    <script src="/js/lz-string.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropper/3.0.0/cropper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.1/js/materialize.min.js"></script>
+    <script src="/js/emojionearea.min.js"></script>
+    <script src="//cdn.quilljs.com/1.3.2/quill.min.js"></script>
+    <script src="/js/sweetalert.min.js"></script>
+    <script src="/js/thumbnail-cut.js"></script>
+    <script src="/js/dropzone.js"></script>
+    <script src="/js/slick.min.js"></script>
+    <script src="/js/lightbox.min.js"></script>
+    <script src="/js/bundle.min.js"></script>
+
+  </body>
+</html>

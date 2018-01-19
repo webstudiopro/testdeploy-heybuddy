@@ -1,0 +1,18 @@
+{
+  "dbUri": "",
+  "jwtSecret": "",
+  "email":{
+    "service":"Mailgun",
+    "user":"postmaster@mg.wiejoo.com",
+    "pass":""
+  },
+  "gmailSecret": "",
+  "url": "",
+  "port":"80",
+  "social":{
+    "facebook":{
+      "appId":"263363467356746",
+      "appSecret":""
+    }
+  }
+}
